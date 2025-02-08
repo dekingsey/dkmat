@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dkmat"
+version = "0.1.0"
+description = "Une librairie pour les matrices ad-hoc"
+authors = [
+  { name = "Tommy Prevost", email = "py@pvst.ca" }
+]
+dependencies = [
+  "numpy",
+]
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
