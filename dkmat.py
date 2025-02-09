@@ -37,5 +37,34 @@ def pprint(A):
   else:
     print(A)
 
-if __name__ == "__main__":
-  pprint(asmat(range(4))/11)
+
+def gauss_jordan_rref(A):
+    # Copie de la matrice pour ne pas modifier l'originale
+    A = A.astype(float)  # Utiliser un type float pour éviter les erreurs lors de la division
+    rows, cols = A.shape
+    row = 0
+
+    for col in range(cols):
+        # Chercher la ligne avec un pivot non nul
+        if np.any(A[row: , col] != 0):  # Vérifier s'il existe un pivot non nul dans la colonne
+            # Chercher la ligne avec un pivot non nul dans cette colonne (pivot au dessus de la ligne actuelle)
+            for i in range(row, rows):
+                if A[i, col] != 0:
+                    # Echanger les lignes pour amener le pivot à la position de la ligne actuelle
+                    A[[row, i]] = A[[i, row]]
+                    break
+
+            # Normaliser la ligne du pivot
+            A[row] = A[row] / A[row, col]
+            
+            # Annuler les éléments sous et au-dessus du pivot
+            for i in range(rows):
+                if i != row:
+                    A[i] = A[i] - A[i, col] * A[row]
+            row += 1
+
+        # Si tous les pivots sont trouvés, on arrête la réduction
+        if row == rows:
+            break
+
+    return A
