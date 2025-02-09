@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from dkmat import asmat
+from dkmat import *
 
 def test_conversion_matrice_2x2():
     result = asmat(range(4))
@@ -26,3 +26,9 @@ def test_conversion_matrice_1x1():
     result = asmat([42])
     expected = np.array([[42]])
     assert np.array_equal(result, expected)
+
+def test_pprint(capsys):
+    pprint(asmat(range(4))/11)
+    captured = capsys.readouterr()
+    expected_output = " 0   1/11 \n2/11 3/11 \n"
+    assert captured.out == expected_output

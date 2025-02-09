@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.linalg as la
+from fractions import Fraction
 
 def asmat(l, r=0):
   arr = np.asarray(l)
@@ -17,3 +18,24 @@ def asmat(l, r=0):
 
   return(arr)
 
+def pprint(A):
+  if isinstance(A, np.ndarray) and A.ndim == 2:
+    l = []
+    maxlen = 0
+    for r in A:
+      rl = []
+      l.append(rl)
+      for v in r:
+        sv = str(Fraction(v).limit_denominator())
+        rl.append(sv)
+        maxlen = max(len(sv), maxlen)
+    for rl in l:
+      sr = ""
+      for sv in rl:
+        sr += sv.center(maxlen) + " "  
+      print(sr)
+  else:
+    print(A)
+
+if __name__ == "__main__":
+  pprint(asmat(range(4))/11)
