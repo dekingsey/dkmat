@@ -2,12 +2,46 @@ import numpy as np
 import numpy.linalg as la
 from fractions import Fraction
 
-def asmat(l, r=0):
+def asvec(*args):
+  v=asmat(args, 1)
+  return(v.T)
+
+def asmat(*args, **kwargs):
+  # peut être appelé ainsi:
+  #  - asmat([1,2,3,4]) retournera une matrice 2x2 (on utiliser la racine carrée pour déterminer le nombre de rangées)
+  #  - asmat((1,2,3,4,5,6), 2) retournera une matrice 2x3
+  #  - asmat(1,2,3,4,5,6, r=2) retournera une matrice 2x3
+  #  - asmat(1,2,3,4) retournera une matrice 2x2 (on utiliser la racine carrée pour déterminer le nombre de rangées)
+  # r = nombre de rangées (si à 0, détecté par la racine carrée)
+  # l = liste à traiter
+  r = 0
+
+  if "r" in kwargs:
+    r = kwargs["r"]
+
+  # twiste de la muerte ici: je convertis args[0] en liste, si c'est déjà une liste, un tuple ou un array
+  # ndim va me retourner sa dimension + 1, sinon, cela va retourner 1.
+  if (len(args) == 2 and np.ndim([args[0]]) > 1 and isinstance(args[1], int) and r==0):
+    l = args[0]
+    r = args[1]
+  # encore la même twiste de la muerte ici
+  elif (len(args) == 1 and np.ndim([args[0]]) > 1):
+    l = args[0]
+  else:
+    l = args
+    
   arr = np.asarray(l)
-  lenl = len(l)
+  # aplatir arr pour que len() fonctionne bien - on veut une matrice en output peu importe le nombre de dimensions à l'entrée, tsé
+  arr = np.reshape(arr, (-1))
+  lenl = len(arr)
 
   if (r==0):
     r = int(pow(lenl, .5))
+    # si possible, on utilise la racine carrée (matrice carrée)
+    # sinon, on aura une matrice carrée avec un nombre de colonnes plus grand que le nombre de rangées
+    # avec un nombre de rangées le plus près possible de la racine carrée
+    while (lenl % r != 0):
+      r -= 1
 
   c = lenl//r
 
